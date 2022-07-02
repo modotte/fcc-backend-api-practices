@@ -1,0 +1,13 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "fcc-backend-api-practices:lib"
+
+    - path: "./app/Main.hs"
+      component: "fcc-backend-api-practices:exe:fcc-backend-api-practices-exe"
+
+    - path: "./app/Paths_fcc_backend_api_practices.hs"
+      component: "fcc-backend-api-practices:exe:fcc-backend-api-practices-exe"
+
+    - path: "./test"
+      component: "fcc-backend-api-practices:test:fcc-backend-api-practices-test"
