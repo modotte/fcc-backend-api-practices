@@ -25,11 +25,14 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      Data.Utility
+      Service.RequestHeaderParser
   other-modules:
       Paths_fcc_backend_api_practices
   hs-source-dirs:
       src
+  default-extensions:
+      OverloadedStrings
   build-depends:
       aeson
     , base >=4.7 && <5
@@ -47,6 +50,8 @@ executable fcc-backend-api-practices-exe
       Paths_fcc_backend_api_practices
   hs-source-dirs:
       app
+  default-extensions:
+      OverloadedStrings
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson
@@ -67,6 +72,8 @@ test-suite fcc-backend-api-practices-test
       Paths_fcc_backend_api_practices
   hs-source-dirs:
       test
+  default-extensions:
+      OverloadedStrings
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson
