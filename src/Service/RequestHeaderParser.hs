@@ -9,10 +9,9 @@ import Data.Aeson.Types
   ( KeyValue ((.=)),
     ToJSON (toJSON),
   )
-import qualified Data.ByteString as B
-import qualified Data.ByteString.Lazy as BL
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
+import qualified Data.Utility as U
 import Relude
 
 data Response = Response
@@ -23,9 +22,9 @@ data Response = Response
   deriving (Show, Generic)
 
 instance DA.ToJSON Response where
-  toJSON (Response ipAddress language software) =
+  toJSON (Response _ipAddress _language _software) =
     DA.object
-      [ "ipaddress" .= ipAddress,
-        "language" .= language,
-        "software" .= software
+      [ "ipaddress" .= _ipAddress,
+        "language" .= _language,
+        "software" .= _software
       ]
