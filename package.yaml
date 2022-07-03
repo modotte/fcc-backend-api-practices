@@ -25,7 +25,10 @@ dependencies:
 - bytestring
 - aeson
 - time
+- network
+- iproute
 - scotty
+- wai
 - wai-extra
 
 
