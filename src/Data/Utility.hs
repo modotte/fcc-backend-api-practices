@@ -20,7 +20,7 @@ makeResponse x = do
   Scotty.addHeader "Content-Type" "application/json"
   Scotty.text . toLText . lbsToSText $ DA.encode x
 
-getUserAgent :: [(LText, LText)] -> Text
-getUserAgent headers = TL.toStrict $ snd x
+getHeader :: LText -> [(LText, LText)] -> Text
+getHeader name headers = TL.toStrict $ snd x
   where
-    x = Prelude.head $ filter (\(k, _) -> k == "User-Agent") headers
+    x = Prelude.head $ filter (\(k, _) -> k == name) headers

@@ -22,4 +22,5 @@ main = Scotty.scotty 3030 $ do
 
   Scotty.get "/api/whoami" $ do
     h <- Scotty.headers
-    U.makeResponse $ SHRP.Response "Text" "Text" (U.getUserAgent h)
+    print h
+    U.makeResponse $ SHRP.Response "Text" (U.getHeader "Accept-Language" h) (U.getHeader "User-Agent" h)
