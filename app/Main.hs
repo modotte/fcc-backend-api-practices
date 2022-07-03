@@ -11,7 +11,7 @@ import qualified Data.Text.Encoding as T
 import qualified Data.Utility as U
 import Network.Wai.Middleware.RequestLogger (logStdoutDev)
 import Relude
-import qualified Service.RequestHeaderParser as SRHP
+import qualified Service.RequestHeaderParser as SHRP
 import qualified Web.Scotty as Scotty
 
 main :: IO ()
@@ -21,4 +21,5 @@ main = Scotty.scotty 3030 $ do
     Scotty.html "<h1>Index page</h1>"
 
   Scotty.get "/api/whoami" $ do
-    Scotty.text ""
+    h <- Scotty.headers
+    U.makeResponse $ SHRP.Response "Text" "Text" (U.getUserAgent h)

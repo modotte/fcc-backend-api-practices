@@ -11,7 +11,7 @@ import Data.Aeson.Types
   )
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
-import qualified Data.Utility as U
+import qualified Network.Wai.Request as Request
 import Relude
 
 data Response = Response
