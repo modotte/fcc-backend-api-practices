@@ -9,6 +9,8 @@ import qualified Data.ByteString.Lazy as BL
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import qualified Data.Utility as U
+import qualified Database.SQLite.Simple as DB
+import Database.SQLite.Simple.FromRow as DBFR
 import qualified Network.Wai as WAI
 import Network.Wai.Middleware.RequestLogger (logStdoutDev)
 import Relude

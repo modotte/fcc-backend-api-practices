@@ -42,6 +42,8 @@ library
     , network
     , relude
     , scotty
+    , sqlite-simple
+    , streamly
     , text
     , time
     , wai
@@ -66,6 +68,8 @@ executable fcc-backend-api-practices-exe
     , network
     , relude
     , scotty
+    , sqlite-simple
+    , streamly
     , text
     , time
     , wai
@@ -91,6 +95,8 @@ test-suite fcc-backend-api-practices-test
     , network
     , relude
     , scotty
+    , sqlite-simple
+    , streamly
     , text
     , time
     , wai
