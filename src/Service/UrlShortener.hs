@@ -15,3 +15,15 @@ import qualified Data.Text.Encoding as T
 import qualified Network.Wai.Parse as WAIP
 import qualified Network.Wai.Request as Request
 import Relude
+
+data Response = Response
+  { originalUrl :: Text,
+    shortUrl :: Text
+  }
+
+instance DA.ToJSON Response where
+  toJSON (Response _originalUrl _shortUrl) =
+    DA.object
+      [ "original_url" .= _originalUrl,
+        "short_url" .= _shortUrl
+      ]

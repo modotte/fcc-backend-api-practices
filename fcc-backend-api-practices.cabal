@@ -40,6 +40,7 @@ library
     , aeson
     , base >=4.7 && <5
     , bytestring
+    , data-default-class
     , iproute
     , network
     , random
@@ -66,6 +67,7 @@ executable fcc-backend-api-practices-exe
     , aeson
     , base >=4.7 && <5
     , bytestring
+    , data-default-class
     , fcc-backend-api-practices
     , iproute
     , network
@@ -94,6 +96,7 @@ test-suite fcc-backend-api-practices-test
     , aeson
     , base >=4.7 && <5
     , bytestring
+    , data-default-class
     , fcc-backend-api-practices
     , iproute
     , network

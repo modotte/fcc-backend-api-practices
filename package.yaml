@@ -33,6 +33,7 @@ dependencies:
 - acid-state
 - uuid
 - random
+- data-default-class
 
 library:
   source-dirs: src

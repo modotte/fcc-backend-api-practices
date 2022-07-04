@@ -11,13 +11,13 @@ import qualified Data.Text.Encoding as T
 import qualified Data.Text.Lazy as TL
 import qualified Network.Socket as Socket
 import Relude
-import qualified Web.Scotty as Scotty
+import qualified Web.Scotty.Trans as Scotty
 import qualified Prelude
 
 lbsToSText :: BL.ByteString -> Text
 lbsToSText = T.decodeUtf8 . B.concat . BL.toChunks
 
-makeResponse :: DA.ToJSON a => a -> Scotty.ActionM ()
+makeResponse :: (Monad m, Scotty.ScottyError e, DA.ToJSON a) => a -> Scotty.ActionT e m ()
 makeResponse x = do
   Scotty.addHeader "Content-Type" "application/json"
   Scotty.text . toLText . lbsToSText $ DA.encode x

@@ -1,3 +1,4 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
@@ -6,6 +7,8 @@ module Main where
 import qualified Data.Aeson as DA
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Lazy as BL
+import Data.Default.Class (Default (..))
+import qualified Data.HashMap.Lazy as HML
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import qualified Data.Utility as U
@@ -14,11 +17,29 @@ import Network.Wai.Middleware.RequestLogger (logStdoutDev)
 import Relude
 import qualified Service.FileMetadata as SFM
 import qualified Service.RequestHeaderParser as SRHP
-import qualified Web.Scotty as Scotty
+import qualified Service.UrlShortener as US
+import qualified Web.Scotty.Trans as Scotty
 import qualified Prelude
 
-main :: IO ()
-main = Scotty.scotty 3030 $ do
+newtype AppState = AppState {urls :: HashMap Text Text}
+
+instance Default AppState where
+  def = AppState HML.empty
+
+newtype WebM a = WebM {runWebM :: ReaderT (TVar AppState) IO a}
+  deriving (Applicative, Functor, Monad, MonadIO, MonadReader (TVar AppState))
+
+webM :: MonadTrans t => WebM a -> t WebM a
+webM = lift
+
+gets :: (AppState -> b) -> WebM b
+gets f = ask >>= liftIO . readTVarIO >>= return . f
+
+modify :: (AppState -> AppState) -> WebM ()
+modify f = ask >>= liftIO . atomically . flip modifyTVar' f
+
+app :: Scotty.ScottyT LText WebM ()
+app = do
   Scotty.middleware logStdoutDev
   Scotty.get "/" $ do
     Scotty.html "<h1>Hello world!</h1>"
@@ -39,3 +60,13 @@ main = Scotty.scotty 3030 $ do
     fs <- Scotty.files
     let fi = (snd . Prelude.head) fs
     U.makeResponse $ SFM.getFileMetadata fi
+
+  Scotty.post "/api/shorturl" $ do
+    (origin :: Text) <- Scotty.param "origin"
+    Scotty.text ""
+
+main :: IO ()
+main = do
+  sync <- newTVarIO def
+  let runActionToIO m = runReaderT (runWebM m) sync
+  Scotty.scottyT 3030 runActionToIO app
