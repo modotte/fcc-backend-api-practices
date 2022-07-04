@@ -32,11 +32,14 @@ newtype WebM a = WebM {runWebM :: ReaderT (TVar AppState) IO a}
 webM :: MonadTrans t => WebM a -> t WebM a
 webM = lift
 
-gets :: (AppState -> b) -> WebM b
-gets f = ask >>= liftIO . readTVarIO >>= return . f
+get :: (AppState -> b) -> WebM b
+get f = ask >>= liftIO . readTVarIO >>= return . f
 
 modify :: (AppState -> AppState) -> WebM ()
 modify f = ask >>= liftIO . atomically . flip modifyTVar' f
+
+addUrl :: Text -> Text -> WebM ()
+addUrl origin shortUrl = Main.modify $ \x -> x {urls = HML.insert origin shortUrl $ urls x}
 
 app :: Scotty.ScottyT LText WebM ()
 app = do
@@ -63,7 +66,9 @@ app = do
 
   Scotty.post "/api/shorturl" $ do
     (origin :: Text) <- Scotty.param "origin"
-    Scotty.text ""
+    webM $ addUrl origin "new"
+    s <- webM $ Main.get urls
+    Scotty.text $ show s
 
 main :: IO ()
 main = do
