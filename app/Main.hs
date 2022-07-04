@@ -88,7 +88,6 @@ app = do
 
   Scotty.get "/api/shorturl/:uid" $ do
     uid :: Int <- Scotty.param "uid"
-    let shortUrl = shortUrlPath <> show uid
     currentUrls <- webM $ Main.get urls
     case HML.lookup uid currentUrls of
       Nothing ->
