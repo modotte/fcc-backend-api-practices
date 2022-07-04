@@ -12,7 +12,8 @@ import qualified Data.Utility as U
 import qualified Network.Wai as WAI
 import Network.Wai.Middleware.RequestLogger (logStdoutDev)
 import Relude
-import qualified Service.RequestHeaderParser as SHRP
+import qualified Service.FileMetadata as SFM
+import qualified Service.RequestHeaderParser as SRHP
 import qualified Web.Scotty as Scotty
 
 main :: IO ()
@@ -25,7 +26,13 @@ main = Scotty.scotty 3030 $ do
     h <- Scotty.headers
     sa <- WAI.remoteHost <$> Scotty.request
     U.makeResponse $
-      SHRP.Response
+      SRHP.Response
         (U.socketAddressToIP sa)
         (U.getHeader "Accept-Language" h)
         (U.getHeader "User-Agent" h)
+
+  Scotty.get "/filemetadata" $ do
+    Scotty.file "filemetadata.html"
+
+  Scotty.post "/api/fileanalyse" $ do
+    U.makeResponse $ SFM.Response "" "" 10
