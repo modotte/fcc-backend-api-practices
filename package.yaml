@@ -31,7 +31,8 @@ dependencies:
 - wai
 - wai-extra
 - acid-state
-
+- uuid
+- random
 
 library:
   source-dirs: src

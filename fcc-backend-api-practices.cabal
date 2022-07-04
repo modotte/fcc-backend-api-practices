@@ -28,6 +28,7 @@ library
       Data.Utility
       Service.FileMetadata
       Service.RequestHeaderParser
+      Service.UrlShortener
   other-modules:
       Paths_fcc_backend_api_practices
   hs-source-dirs:
@@ -41,10 +42,12 @@ library
     , bytestring
     , iproute
     , network
+    , random
     , relude
     , scotty
     , text
     , time
+    , uuid
     , wai
     , wai-extra
   default-language: Haskell2010
@@ -66,10 +69,12 @@ executable fcc-backend-api-practices-exe
     , fcc-backend-api-practices
     , iproute
     , network
+    , random
     , relude
     , scotty
     , text
     , time
+    , uuid
     , wai
     , wai-extra
   default-language: Haskell2010
@@ -92,10 +97,12 @@ test-suite fcc-backend-api-practices-test
     , fcc-backend-api-practices
     , iproute
     , network
+    , random
     , relude
     , scotty
     , text
     , time
+    , uuid
     , wai
     , wai-extra
   default-language: Haskell2010
