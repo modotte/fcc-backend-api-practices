@@ -1,8 +1,13 @@
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Data.Utility where
 
 import qualified Data.Aeson as DA
+import Data.Aeson.Types
+  ( KeyValue ((.=)),
+    ToJSON (toJSON),
+  )
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.IP as IP
@@ -13,6 +18,11 @@ import qualified Network.Socket as Socket
 import Relude
 import qualified Web.Scotty.Trans as Scotty
 import qualified Prelude
+
+newtype ErrorResponse = ErrorResponse {errorResp :: Text} deriving (Show, Generic)
+
+instance DA.ToJSON ErrorResponse where
+  toJSON (ErrorResponse _errorResp) = DA.object ["error" .= _errorResp]
 
 lbsToSText :: BL.ByteString -> Text
 lbsToSText = T.decodeUtf8 . B.concat . BL.toChunks

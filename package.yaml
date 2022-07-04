@@ -30,7 +30,6 @@ dependencies:
 - scotty
 - wai
 - wai-extra
-- acid-state
 - uuid
 - random
 - data-default-class
