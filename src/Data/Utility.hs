@@ -27,8 +27,8 @@ getHeader name headers = TL.toStrict $ snd x
   where
     x = Prelude.head $ filter (\(k, _) -> k == name) headers
 
-saToIP :: Socket.SockAddr -> Text
-saToIP sa = case sa of
+socketAddressToIP :: Socket.SockAddr -> Text
+socketAddressToIP sa = case sa of
   Socket.SockAddrInet _ ha -> show (IP.IPv4 $ IP.fromHostAddress ha)
   Socket.SockAddrInet6 _ _ ha _ -> show (IP.IPv6 $ IP.fromHostAddress6 ha)
   _ -> error "Couldn't get IP!"

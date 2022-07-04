@@ -30,7 +30,7 @@ dependencies:
 - scotty
 - wai
 - wai-extra
-- sqlite-simple
+- acid-state
 - streamly
 
 
@@ -45,7 +45,6 @@ executables:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
-    - -Wall
     dependencies:
     - fcc-backend-api-practices
 
