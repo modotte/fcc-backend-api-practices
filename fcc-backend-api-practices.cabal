@@ -43,7 +43,6 @@ library
     , network
     , relude
     , scotty
-    , streamly
     , text
     , time
     , wai
@@ -58,7 +57,7 @@ executable fcc-backend-api-practices-exe
       app
   default-extensions:
       OverloadedStrings
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall
   build-depends:
       acid-state
     , aeson
@@ -69,7 +68,6 @@ executable fcc-backend-api-practices-exe
     , network
     , relude
     , scotty
-    , streamly
     , text
     , time
     , wai
@@ -96,7 +94,6 @@ test-suite fcc-backend-api-practices-test
     , network
     , relude
     , scotty
-    , streamly
     , text
     , time
     , wai

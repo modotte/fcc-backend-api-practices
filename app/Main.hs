@@ -15,6 +15,7 @@ import Relude
 import qualified Service.FileMetadata as SFM
 import qualified Service.RequestHeaderParser as SRHP
 import qualified Web.Scotty as Scotty
+import qualified Prelude
 
 main :: IO ()
 main = Scotty.scotty 3030 $ do
@@ -35,4 +36,6 @@ main = Scotty.scotty 3030 $ do
     Scotty.file "filemetadata.html"
 
   Scotty.post "/api/fileanalyse" $ do
-    U.makeResponse $ SFM.Response "" "" 10
+    fs <- Scotty.files
+    let fi = (snd . Prelude.head) fs
+    U.makeResponse $ SFM.getFileMetadata fi
