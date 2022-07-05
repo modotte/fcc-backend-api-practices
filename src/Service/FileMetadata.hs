@@ -42,6 +42,6 @@ getFileMetadata fi =
         else
           Right $
             Response
-              (T.decodeUtf8 $ WAIP.fileName fi)
+              fileName
               (T.decodeUtf8 $ WAIP.fileContentType fi)
               fileSize
