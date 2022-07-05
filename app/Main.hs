@@ -37,7 +37,6 @@ app = do
   Scotty.get "/service/filemetadata" $ do
     Scotty.file "filemetadata.html"
 
-  -- FIXME: Handle empty file!!
   Scotty.post "/api/fileanalyse" $ do
     fs <- Scotty.files
     let fi = snd $ Prelude.head fs
