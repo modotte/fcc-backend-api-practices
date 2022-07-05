@@ -4,12 +4,8 @@
 module Main where
 
 import qualified Data.AppState as DAS
-import qualified Data.ByteString as B
-import qualified Data.ByteString.Lazy as BL
-import Data.Default.Class (Default (..))
+import qualified Data.Default.Class as DDC
 import qualified Data.HashMap.Lazy as HML
-import qualified Data.Text as T
-import qualified Data.Text.Encoding as T
 import qualified Data.Utility as U
 import qualified Network.Wai as WAI
 import Network.Wai.Middleware.RequestLogger (logStdoutDev)
@@ -74,6 +70,6 @@ app = do
 
 main :: IO ()
 main = do
-  sync <- newTVarIO def
+  sync <- newTVarIO DDC.def
   let runActionToIO m = runReaderT (DAS.runWebM m) sync
   Scotty.scottyT U.port runActionToIO app
