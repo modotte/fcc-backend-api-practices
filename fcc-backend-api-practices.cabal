@@ -29,6 +29,7 @@ library
       Data.Utility
       Service.FileMetadata
       Service.RequestHeaderParser
+      Service.Timestamp
       Service.UrlShortener
   other-modules:
       Paths_fcc_backend_api_practices

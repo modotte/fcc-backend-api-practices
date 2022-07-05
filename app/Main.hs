@@ -6,12 +6,14 @@ module Main where
 import qualified Data.AppState as DAS
 import qualified Data.Default.Class as DDC
 import qualified Data.HashMap.Lazy as HML
+import qualified Data.Time as DT
 import qualified Data.Utility as U
 import qualified Network.Wai as WAI
 import Network.Wai.Middleware.RequestLogger (logStdoutDev)
 import Relude
 import qualified Service.FileMetadata as SFM
 import qualified Service.RequestHeaderParser as SRHP
+import qualified Service.Timestamp as ST
 import qualified Service.UrlShortener as US
 import qualified Web.Scotty.Trans as Scotty
 import qualified Prelude
@@ -33,6 +35,14 @@ app = do
         (U.socketAddressToIP sa)
         (U.getHeader "Accept-Language" h)
         (U.getHeader "User-Agent" h)
+
+  Scotty.get "/api/date/:date" $ do
+    date :: Text <- Scotty.param "date"
+    if date == ""
+      then do
+        ct <- liftIO DT.getCurrentTime
+        U.makeResponse $ ST.Response (ST.utcAsUnix ct) (ST.utcAsDefaultLocale ct)
+      else U.makeResponse $ U.ErrorResponse "w"
 
   Scotty.get "/service/filemetadata" $ do
     Scotty.file "filemetadata.html"
