@@ -42,7 +42,7 @@ app = do
       then do
         ct <- liftIO DT.getCurrentTime
         U.makeResponse $ ST.Response (ST.utcAsUnix ct) (ST.utcAsDefaultLocale ct)
-      else U.makeResponse $ U.ErrorResponse "w"
+      else U.makeResponse $ ST.Response (ST.utcAsUnix $ ST.readTime date) (ST.utcAsDefaultLocale $ ST.readTime date)
 
   Scotty.get "/service/filemetadata" $ do
     Scotty.file "filemetadata.html"

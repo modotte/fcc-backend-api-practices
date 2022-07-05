@@ -27,6 +27,9 @@ data Response = Response
   }
   deriving (Show, Generic, DA.ToJSON)
 
+readTime :: Text -> DT.UTCTime
+readTime = DT.parseTimeOrError True DT.defaultTimeLocale "%s" . T.unpack
+
 utcAsUnix :: DT.UTCTime -> Integer
 utcAsUnix = Prelude.read . DT.formatTime DT.defaultTimeLocale "%s"
 
