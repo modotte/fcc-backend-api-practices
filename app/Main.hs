@@ -23,8 +23,7 @@ app = do
     Scotty.file "index.html"
 
   Scotty.get "/service/headerparser" $
-    Scotty.file
-      "headerparser.html"
+    Scotty.file "headerparser.html"
 
   Scotty.get "/api/whoami" $ do
     h <- Scotty.headers
@@ -41,7 +40,7 @@ app = do
   -- FIXME: Handle empty file!!
   Scotty.post "/api/fileanalyse" $ do
     fs <- Scotty.files
-    let fi = (snd . Prelude.head) fs
+    let fi = snd $ Prelude.head fs
     U.makeResponse $ SFM.getFileMetadata fi
 
   Scotty.get "/service/shorturl" $ do
