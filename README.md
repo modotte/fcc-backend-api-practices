@@ -14,3 +14,8 @@ Web Framework used: Scotty
 
 I purposely skipped the Exercise Tracker because I think it's not nice
 to even interact with as a user. I rather jumping to do QA projects from FCC.
+
+## Usage
+
+Type `stack run` in your terminal to start the server and go to http://localhost:3030
+in your browser.
