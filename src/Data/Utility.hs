@@ -19,6 +19,9 @@ import Relude
 import qualified Web.Scotty.Trans as Scotty
 import qualified Prelude
 
+port :: Int
+port = 3030
+
 newtype ErrorResponse = ErrorResponse {errorResp :: Text} deriving (Show, Generic)
 
 instance DA.ToJSON ErrorResponse where

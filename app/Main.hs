@@ -1,9 +1,9 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 
 module Main where
 
+import qualified Data.AppState as DAS
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Lazy as BL
 import Data.Default.Class (Default (..))
@@ -20,43 +20,7 @@ import qualified Service.UrlShortener as US
 import qualified Web.Scotty.Trans as Scotty
 import qualified Prelude
 
-port :: Int
-port = 3030
-
-shortUrlPath :: Text
-shortUrlPath = "http://127.0.0.1:" <> show port <> "/api/shorturl/"
-
-type Urls = HashMap Int Text
-
-data AppState = AppState {urlCounter :: Int, urls :: Urls}
-
-instance Default AppState where
-  def =
-    AppState 1 $
-      HML.fromList [(1, "https://forum.freecodecamp.org/")]
-
-newtype WebM a = WebM {runWebM :: ReaderT (TVar AppState) IO a}
-  deriving (Applicative, Functor, Monad, MonadIO, MonadReader (TVar AppState))
-
-webM :: MonadTrans t => WebM a -> t WebM a
-webM = lift
-
-get :: (AppState -> b) -> WebM b
-get f = ask >>= liftIO . readTVarIO >>= return . f
-
-modify :: (AppState -> AppState) -> WebM ()
-modify f = ask >>= liftIO . atomically . flip modifyTVar' f
-
-incrementCounter :: WebM ()
-incrementCounter = Main.modify $ \x -> x {urlCounter = urlCounter x + 1}
-
-addUrl :: Int -> Text -> WebM ()
-addUrl shortUrl originUrl = Main.modify $ \x -> x {urls = HML.insert shortUrl originUrl $ urls x}
-
-isOriginUrlExists :: Text -> Urls -> Bool
-isOriginUrlExists originUrl _urls = isNothing . find (== originUrl) $ HML.elems _urls
-
-app :: Scotty.ScottyT LText WebM ()
+app :: Scotty.ScottyT LText DAS.WebM ()
 app = do
   Scotty.middleware logStdoutDev
   Scotty.get "/" $ do
@@ -89,27 +53,27 @@ app = do
 
   Scotty.get "/api/shorturl/:uid" $ do
     uid :: Int <- Scotty.param "uid"
-    currentUrls <- webM $ Main.get urls
+    currentUrls <- DAS.webM $ DAS.get DAS.urls
     case HML.lookup uid currentUrls of
       Nothing ->
         U.makeResponse $ U.ErrorResponse "Short URL doesn't exist! Please add the new origin URL first!"
       Just originUrl -> Scotty.redirect $ toLText originUrl
 
   Scotty.post "/api/shorturl/" $ do
-    (originUrl :: Text) <- Scotty.param "origin"
+    originUrl :: Text <- Scotty.param "origin"
 
-    currentUrls <- webM $ Main.get urls
+    currentUrls <- DAS.webM $ DAS.get DAS.urls
 
-    if isOriginUrlExists originUrl currentUrls
-      then webM incrementCounter
+    if US.isOriginUrlExists originUrl currentUrls
+      then DAS.webM US.incrementUrlCounter
       else pure ()
 
-    nc <- webM $ Main.get urlCounter
-    webM $ addUrl nc originUrl
-    U.makeResponse $ US.Response originUrl $ shortUrlPath <> show nc
+    nc <- DAS.webM $ DAS.get DAS.urlCounter
+    DAS.webM $ US.addUrl nc originUrl
+    U.makeResponse $ US.Response originUrl $ US.shortUrlPath <> show nc
 
 main :: IO ()
 main = do
   sync <- newTVarIO def
-  let runActionToIO m = runReaderT (runWebM m) sync
-  Scotty.scottyT port runActionToIO app
+  let runActionToIO m = runReaderT (DAS.runWebM m) sync
+  Scotty.scottyT U.port runActionToIO app
