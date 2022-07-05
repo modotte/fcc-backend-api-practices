@@ -41,7 +41,9 @@ app = do
   Scotty.post "/api/fileanalyse" $ do
     fs <- Scotty.files
     let fi = snd $ Prelude.head fs
-    U.makeResponse $ SFM.getFileMetadata fi
+    case SFM.getFileMetadata fi of
+      Left err -> U.makeResponse $ U.ErrorResponse err
+      Right r -> U.makeResponse r
 
   Scotty.get "/service/shorturl" $ do
     Scotty.file "shorturl.html"
