@@ -36,6 +36,9 @@ app = do
         (U.getHeader "Accept-Language" h)
         (U.getHeader "User-Agent" h)
 
+  Scotty.get "/service/timestamp" $ do
+    Scotty.file "timestamp.html"
+
   Scotty.get "/api/date/:date" $ do
     date :: Text <- Scotty.param "date"
     if date == ""
