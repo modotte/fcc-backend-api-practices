@@ -20,13 +20,10 @@ parseAsFormat format = DT.parseTimeM True DT.defaultTimeLocale format . T.unpack
 
 -- | This will parse unix time (epoch) and locale time
 readTime :: Text -> Maybe DT.UTCTime
-readTime t =
-  case localeTime t of
-    Nothing -> unixTime t
-    Just x -> Just x
+readTime t = localeTime <|> unixTime
   where
-    localeTime = parseAsFormat "%Y-%-m-%-d %H:%M:%S"
-    unixTime = parseAsFormat "%s"
+    localeTime = parseAsFormat "%Y-%-m-%-d %H:%M:%S" t
+    unixTime = parseAsFormat "%s" t
 
 utcAsUnix :: DT.UTCTime -> Maybe Integer
 utcAsUnix = readMaybe . DT.formatTime DT.defaultTimeLocale "%s"
