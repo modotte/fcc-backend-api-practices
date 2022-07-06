@@ -60,3 +60,6 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - fcc-backend-api-practices
+    - QuickCheck
+    - tasty
+    - tasty-quickcheck
