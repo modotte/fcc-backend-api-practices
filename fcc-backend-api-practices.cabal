@@ -37,7 +37,7 @@ library
   hs-source-dirs:
       src
   default-extensions:
-      OverloadedStrings
+      NoImplicitPrelude, OverloadedStrings
   build-depends:
       aeson
     , base >=4.7 && <5
@@ -62,7 +62,7 @@ executable fcc-backend-api-practices-exe
   hs-source-dirs:
       app
   default-extensions:
-      OverloadedStrings
+      NoImplicitPrelude, OverloadedStrings
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall
   build-depends:
       aeson
@@ -90,7 +90,7 @@ test-suite fcc-backend-api-practices-test
   hs-source-dirs:
       test
   default-extensions:
-      OverloadedStrings
+      NoImplicitPrelude, OverloadedStrings
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson

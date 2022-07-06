@@ -1,6 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DuplicateRecordFields #-}
-{-# LANGUAGE NoImplicitPrelude #-}
 
 module Service.RequestHeaderParser where
 
