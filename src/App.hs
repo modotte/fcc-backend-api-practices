@@ -33,11 +33,10 @@ app = do
       Right alh -> case U.getHeader "User-Agent" h of
         Left uaErr -> U.makeResponse $ U.ErrorResponse uaErr
         Right ua ->
-          U.makeResponse $
-            SRHP.Response
-              (U.socketAddressToIP sa)
-              alh
-              ua
+          case U.socketAddressToIP sa of
+            Left saErr -> U.makeResponse $ U.ErrorResponse saErr
+            Right sa' ->
+              U.makeResponse $ SRHP.Response sa' alh ua
 
   Scotty.get "/service/timestamp" $ do
     Scotty.file "timestamp.html"

@@ -40,8 +40,8 @@ getHeader name headers =
   where
     x = viaNonEmpty head $ filter (\(k, _) -> k == name) headers
 
-socketAddressToIP :: Socket.SockAddr -> Text
+socketAddressToIP :: Socket.SockAddr -> Either Text Text
 socketAddressToIP sa = case sa of
-  Socket.SockAddrInet _ ha -> show (IP.IPv4 $ IP.fromHostAddress ha)
-  Socket.SockAddrInet6 _ _ ha _ -> show (IP.IPv6 $ IP.fromHostAddress6 ha)
-  _ -> error "Couldn't get IP!"
+  Socket.SockAddrInet _ ha -> Right $ show (IP.IPv4 $ IP.fromHostAddress ha)
+  Socket.SockAddrInet6 _ _ ha _ -> Right $ show (IP.IPv6 $ IP.fromHostAddress6 ha)
+  _ -> Left "Couldn't get client IP address!"
