@@ -14,7 +14,6 @@ import qualified Service.RequestHeaderParser as SRHP
 import qualified Service.Timestamp as ST
 import qualified Service.UrlShortener as US
 import qualified Web.Scotty.Trans as Scotty
-import qualified Prelude
 
 app :: Scotty.ScottyT LText DAS.WebM ()
 app = do
@@ -60,10 +59,13 @@ app = do
 
   Scotty.post "/api/fileanalyse" $ do
     fs <- Scotty.files
-    let fi = snd $ Prelude.head fs
-    case SFM.getFileMetadata fi of
-      Left err -> U.makeResponse $ U.ErrorResponse err
-      Right r -> U.makeResponse r
+
+    case viaNonEmpty head fs of
+      Nothing -> U.makeResponse $ U.ErrorResponse "No file data provided!"
+      Just file ->
+        case SFM.getFileMetadata $ snd file of
+          Left err -> U.makeResponse $ U.ErrorResponse err
+          Right r -> U.makeResponse r
 
   Scotty.get "/service/shorturl" $ do
     Scotty.file "shorturl.html"
