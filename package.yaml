@@ -63,3 +63,5 @@ tests:
     - QuickCheck
     - tasty
     - tasty-quickcheck
+    - tasty-hunit
+    - tasty-hspec

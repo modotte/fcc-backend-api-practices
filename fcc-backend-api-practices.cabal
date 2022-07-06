@@ -105,6 +105,8 @@ test-suite fcc-backend-api-practices-test
     , relude
     , scotty
     , tasty
+    , tasty-hspec
+    , tasty-hunit
     , tasty-quickcheck
     , text
     , time
