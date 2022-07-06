@@ -1,4 +1,6 @@
+import qualified Data.Fixed as DF
 import qualified Data.Text.Lazy as TL
+import qualified Data.Time as DT
 import qualified Data.Utility as U
 import Relude
 import qualified Service.Timestamp as ST
@@ -6,6 +8,15 @@ import Test.Hspec
 import Test.Tasty
 import Test.Tasty.Hspec
 import Test.Tasty.QuickCheck
+
+mkUTCTime ::
+  (Integer, Int, Int) ->
+  (Int, Int, DF.Pico) ->
+  DT.UTCTime
+mkUTCTime (year, mon, day) (hour, min, sec) =
+  DT.UTCTime
+    (DT.fromGregorian year mon day)
+    (DT.timeOfDayToTime (DT.TimeOfDay hour min sec))
 
 hspecSuite :: Spec
 hspecSuite = do
@@ -23,7 +34,13 @@ hspecSuite = do
       ST.readTime "1451001600.2323(@(#U&@#" `shouldBe` Nothing
 
     it "parse invalid date-time format" $ do
-      ST.readTime "2015-08-02 20:30:02 GMT" `shouldBe` Nothing
+      ST.readTime "2015-08-02 2000:30:02" `shouldBe` Nothing
+
+    it "parse valid utc timelocale format: 2022-08-14 00:00:20" $ do
+      ST.readTime "2022-08-14 00:00:20" `shouldBe` Just (mkUTCTime (2022, 08, 14) (00, 00, 20))
+
+    it "parse valid unix format: 1451001600" $ do
+      ST.readTime "1451001600" `shouldBe` Just (mkUTCTime (2015, 12, 25) (00, 00, 00))
 
 propertyTests :: TestTree
 propertyTests =
