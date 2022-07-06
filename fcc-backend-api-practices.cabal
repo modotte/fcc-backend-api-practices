@@ -99,6 +99,7 @@ test-suite fcc-backend-api-practices-test
     , bytestring
     , data-default-class
     , fcc-backend-api-practices
+    , hspec
     , iproute
     , network
     , random
@@ -106,8 +107,8 @@ test-suite fcc-backend-api-practices-test
     , scotty
     , tasty
     , tasty-hspec
-    , tasty-hunit
     , tasty-quickcheck
+    , tasty-wai
     , text
     , time
     , uuid

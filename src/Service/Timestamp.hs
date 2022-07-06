@@ -15,16 +15,18 @@ data Response = Response
   }
   deriving (Show, Generic, DA.ToJSON)
 
+parseAsFormat :: String -> Text -> Maybe DT.UTCTime
+parseAsFormat format = DT.parseTimeM True DT.defaultTimeLocale format . T.unpack
+
 -- | This will parse unix time (epoch) and locale time
 readTime :: Text -> Maybe DT.UTCTime
 readTime t =
-  case localeTime it of
-    Nothing -> unixTime it
-    Just ut -> Just ut
+  case localeTime t of
+    Nothing -> unixTime t
+    Just x -> Just x
   where
-    it = T.unpack t
-    localeTime x = DT.parseTimeM True DT.defaultTimeLocale "%Y-%-m-%-d %H:%M:%S" x :: Maybe DT.UTCTime
-    unixTime y = DT.parseTimeM True DT.defaultTimeLocale "%s" y :: Maybe DT.UTCTime
+    localeTime x = parseAsFormat "%Y-%-m-%-d %H:%M:%S" x
+    unixTime x = parseAsFormat "%s" x
 
 utcAsUnix :: DT.UTCTime -> Maybe Integer
 utcAsUnix = readMaybe . DT.formatTime DT.defaultTimeLocale "%s"

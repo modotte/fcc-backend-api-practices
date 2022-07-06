@@ -61,7 +61,8 @@ tests:
     dependencies:
     - fcc-backend-api-practices
     - QuickCheck
+    - hspec
     - tasty
     - tasty-quickcheck
-    - tasty-hunit
     - tasty-hspec
+    - tasty-wai
