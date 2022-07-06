@@ -15,7 +15,6 @@ import qualified Data.Text.Lazy as TL
 import qualified Network.Socket as Socket
 import Relude
 import qualified Web.Scotty.Trans as Scotty
-import qualified Prelude
 
 port :: Int
 port = 3030
@@ -33,10 +32,13 @@ makeResponse x = do
   Scotty.addHeader "Content-Type" "application/json"
   Scotty.text . toLText . lbsToSText $ DA.encode x
 
-getHeader :: LText -> [(LText, LText)] -> Text
-getHeader name headers = TL.toStrict $ snd x
+getHeader :: LText -> [(LText, LText)] -> Either Text Text
+getHeader name headers =
+  case x of
+    Nothing -> Left $ TL.toStrict name <> " header not found!"
+    Just h -> Right $ TL.toStrict $ snd h
   where
-    x = Prelude.head $ filter (\(k, _) -> k == name) headers
+    x = viaNonEmpty head $ filter (\(k, _) -> k == name) headers
 
 socketAddressToIP :: Socket.SockAddr -> Text
 socketAddressToIP sa = case sa of

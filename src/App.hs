@@ -28,11 +28,17 @@ app = do
   Scotty.get "/api/whoami" $ do
     h <- Scotty.headers
     sa <- WAI.remoteHost <$> Scotty.request
-    U.makeResponse $
-      SRHP.Response
-        (U.socketAddressToIP sa)
-        (U.getHeader "Accept-Language" h)
-        (U.getHeader "User-Agent" h)
+
+    case U.getHeader "Accept-Language" h of
+      Left alErr -> U.makeResponse $ U.ErrorResponse alErr
+      Right alh -> case U.getHeader "User-Agent" h of
+        Left uaErr -> U.makeResponse $ U.ErrorResponse uaErr
+        Right ua ->
+          U.makeResponse $
+            SRHP.Response
+              (U.socketAddressToIP sa)
+              alh
+              ua
 
   Scotty.get "/service/timestamp" $ do
     Scotty.file "timestamp.html"
