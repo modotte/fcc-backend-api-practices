@@ -47,12 +47,17 @@ app = do
     if date == ""
       then do
         ct <- liftIO DT.getCurrentTime
-        U.makeResponse $ ST.Response (ST.utcAsUnix ct) (ST.utcAsDefaultLocale ct)
+        case ST.utcAsUnix ct of
+          Nothing -> U.makeResponse $ U.ErrorResponse "Cannot parse utc time as unix!"
+          Just ut -> U.makeResponse $ ST.Response ut (ST.utcAsDefaultLocale ct)
       else case ST.readTime date of
         Nothing -> U.makeResponse $ U.ErrorResponse "Invalid date format!!! Please try again!! We only accept two time formats: %Y-%-m-%-d %H:%M:%S and %s"
         Just pt ->
-          U.makeResponse $
-            ST.Response (ST.utcAsUnix pt) (ST.utcAsDefaultLocale pt)
+          case ST.utcAsUnix pt of
+            Nothing -> U.makeResponse $ U.ErrorResponse "Cannot parse utc time as unix!"
+            Just ut ->
+              U.makeResponse $
+                ST.Response ut (ST.utcAsDefaultLocale pt)
 
   Scotty.get "/service/filemetadata" $ do
     Scotty.file "filemetadata.html"
