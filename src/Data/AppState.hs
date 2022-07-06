@@ -4,7 +4,6 @@
 module Data.AppState where
 
 import Data.Default.Class (Default (..))
-import Data.Functor ((<&>))
 import qualified Data.HashMap.Lazy as HML
 import Relude
 

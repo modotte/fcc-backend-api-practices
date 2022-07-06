@@ -9,9 +9,6 @@ import Data.Aeson.Types
   ( KeyValue ((.=)),
     ToJSON (toJSON),
   )
-import qualified Data.Text as T
-import qualified Data.Text.Encoding as T
-import qualified Network.Wai.Request as Request
 import Relude
 
 data Response = Response
