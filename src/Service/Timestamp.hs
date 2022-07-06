@@ -25,8 +25,8 @@ readTime t =
     Nothing -> unixTime t
     Just x -> Just x
   where
-    localeTime x = parseAsFormat "%Y-%-m-%-d %H:%M:%S" x
-    unixTime x = parseAsFormat "%s" x
+    unixTime = parseAsFormat "%s"
+    localeTime = parseAsFormat "%Y-%-m-%-d %H:%M:%S"
 
 utcAsUnix :: DT.UTCTime -> Maybe Integer
 utcAsUnix = readMaybe . DT.formatTime DT.defaultTimeLocale "%s"
