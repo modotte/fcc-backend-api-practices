@@ -60,9 +60,6 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - fcc-backend-api-practices
-    - QuickCheck
     - hspec
     - tasty
-    - tasty-quickcheck
     - tasty-hspec
-    - tasty-wai

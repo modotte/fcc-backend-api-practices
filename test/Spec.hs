@@ -7,7 +7,6 @@ import qualified Service.Timestamp as ST
 import Test.Hspec
 import Test.Tasty
 import Test.Tasty.Hspec
-import Test.Tasty.QuickCheck
 
 mkUTCTime ::
   (Integer, Int, Int) ->
@@ -42,14 +41,8 @@ hspecSuite = do
     it "parse valid unix format: 1451001600" $ do
       ST.readTime "1451001600" `shouldBe` Just (mkUTCTime (2015, 12, 25) (00, 00, 00))
 
-propertyTests :: TestTree
-propertyTests =
-  testGroup
-    "Property tests"
-    []
-
 main :: IO ()
 main = do
   hspecTests <- testSpec "hspec tests" hspecSuite
   defaultMain $
-    testGroup "All tests" [hspecTests, propertyTests]
+    testGroup "All tests" [hspecTests]
