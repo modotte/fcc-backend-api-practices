@@ -30,6 +30,7 @@ shortUrlPath = "http://127.0.0.1:" <> show U.port <> "/api/shorturl/"
 incrementUrlCounter :: DAS.WebM ()
 incrementUrlCounter = DAS.modify $ \x -> x {DAS.urlCounter = DAS.urlCounter x + 1}
 
+-- TODO: Verify if originURL is complete and correctly crafted
 addUrl :: Int -> Text -> DAS.WebM ()
 addUrl su ou = DAS.modify $ \x -> x {DAS.urls = HML.insert su ou $ DAS.urls x}
 
