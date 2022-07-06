@@ -46,6 +46,7 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     - -Wall
+
     dependencies:
     - fcc-backend-api-practices
 

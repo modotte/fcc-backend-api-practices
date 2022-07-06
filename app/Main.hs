@@ -46,7 +46,7 @@ app = do
         ct <- liftIO DT.getCurrentTime
         U.makeResponse $ ST.Response (ST.utcAsUnix ct) (ST.utcAsDefaultLocale ct)
       else case ST.readTime date of
-        Nothing -> U.makeResponse $ U.ErrorResponse "Invalid date format!!! Please try again!! We only accept this time format: %Y-%-m-%-d %H:%M:%S"
+        Nothing -> U.makeResponse $ U.ErrorResponse "Invalid date format!!! Please try again!! We only accept two time formats: %Y-%-m-%-d %H:%M:%S and %s"
         Just pt ->
           U.makeResponse $
             ST.Response (ST.utcAsUnix pt) (ST.utcAsDefaultLocale pt)

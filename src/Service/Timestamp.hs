@@ -16,8 +16,6 @@ import qualified Data.Text.Encoding as T
 import qualified Data.Time as DT
 import qualified Data.Time.Clock.System as DTCS
 import qualified Data.Utility as U
-import qualified Network.Wai.Parse as WAIP
-import qualified Network.Wai.Request as Request
 import Relude
 import qualified Prelude
 
@@ -27,10 +25,16 @@ data Response = Response
   }
   deriving (Show, Generic, DA.ToJSON)
 
+-- | This will parse unix time (epoch) and locale time
 readTime :: Text -> Maybe DT.UTCTime
-readTime t = do
-  let t' = T.unpack (t :: Text)
-   in DT.parseTimeM True DT.defaultTimeLocale "%Y-%-m-%-d %H:%M:%S" t' :: Maybe DT.UTCTime
+readTime t =
+  case localeTime t of
+    Nothing -> unixTime t
+    Just ut -> Just ut
+  where
+    it = T.unpack t
+    localeTime x = DT.parseTimeM True DT.defaultTimeLocale "%Y-%-m-%-d %H:%M:%S" it :: Maybe DT.UTCTime
+    unixTime y = DT.parseTimeM True DT.defaultTimeLocale "%s" it
 
 utcAsUnix :: DT.UTCTime -> Integer
 utcAsUnix = Prelude.read . DT.formatTime DT.defaultTimeLocale "%s"
