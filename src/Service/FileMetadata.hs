@@ -14,17 +14,17 @@ import qualified Network.Wai.Parse as WAIP
 import Relude
 
 data Response = Response
-  { name :: Text,
-    rType :: Text,
-    size :: Integer
+  { name :: !Text,
+    _type :: !Text,
+    size :: !Integer
   }
-  deriving (Show, Generic)
+  deriving (Show, Generic, Eq)
 
 instance DA.ToJSON Response where
-  toJSON (Response _name _rType _size) =
+  toJSON (Response _name _type' _size) =
     DA.object
       [ "name" .= _name,
-        "type" .= _rType,
+        "type" .= _type',
         "size" .= _size
       ]
 

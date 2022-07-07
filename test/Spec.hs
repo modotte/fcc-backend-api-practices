@@ -2,7 +2,9 @@ import qualified Data.Fixed as DF
 import qualified Data.Text.Lazy as TL
 import qualified Data.Time as DT
 import qualified Data.Utility as U
+import qualified Network.Wai.Parse as WAIP
 import Relude
+import qualified Service.FileMetadata as SFM
 import qualified Service.Timestamp as ST
 import Test.Hspec
 import Test.Tasty
@@ -46,6 +48,16 @@ hspecSuite = do
 
     it "convert utc time to default locale time as text" $ do
       ST.utcAsDefaultLocale (mkUTCTime (1995, 02, 18) (00, 23, 00)) `shouldBe` "Sat, 18 Feb 1995 00:23:00 UTC"
+
+  describe "SFM.getFileMetadata" $ do
+    it "parse the correct fileinfo data" $ do
+      SFM.getFileMetadata (WAIP.FileInfo "kelpo.txt" "plain/text" "I love apples!") `shouldBe` Right (SFM.Response {SFM.name = "kelpo.txt", SFM._type = "plain/text", SFM.size = 14})
+
+    it "parse non existing file. This would happen when user click upload without any file being selected first." $ do
+      SFM.getFileMetadata (WAIP.FileInfo "\"\"" "application/octet-stream" "") `shouldBe` Left "There is no file being uploaded! Try uploading a valid file again!"
+
+    it "parse an empty file" $ do
+      SFM.getFileMetadata (WAIP.FileInfo "kelpo.txt" "plain/text" "") `shouldBe` Right (SFM.Response {SFM.name = "kelpo.txt", SFM._type = "plain/text", SFM.size = 0})
 
 main :: IO ()
 main = do
