@@ -87,9 +87,9 @@ app = do
 
     currentUrls <- DAS.webM $ DAS.get DAS.urls
 
-    if US.isOriginUrlExists originUrl currentUrls
-      then DAS.webM US.incrementUrlCounter
-      else pure ()
+    case find (== originUrl) currentUrls of
+      Nothing -> DAS.webM US.incrementUrlCounter
+      Just _ -> pure ()
 
     nc <- DAS.webM $ DAS.get DAS.urlCounter
     DAS.webM $ US.addUrl nc originUrl

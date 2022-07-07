@@ -33,6 +33,3 @@ incrementUrlCounter = DAS.modify $ \x -> x {DAS.urlCounter = DAS.urlCounter x + 
 -- TODO: Verify if originURL is complete and correctly crafted
 addUrl :: Int -> Text -> DAS.WebM ()
 addUrl su ou = DAS.modify $ \x -> x {DAS.urls = HML.insert su ou $ DAS.urls x}
-
-isOriginUrlExists :: Text -> HashMap Int Text -> Bool
-isOriginUrlExists originUrl _urls = isNothing . find (== originUrl) $ HML.elems _urls
