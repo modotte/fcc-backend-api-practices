@@ -2,7 +2,13 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DuplicateRecordFields #-}
 
-module Service.Timestamp where
+module Service.Timestamp
+  ( Response (..),
+    readTime,
+    utcAsUnix,
+    utcAsDefaultLocale,
+  )
+where
 
 import qualified Data.Aeson as DA
 import qualified Data.Text as T

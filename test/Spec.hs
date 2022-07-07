@@ -41,6 +41,12 @@ hspecSuite = do
     it "parse valid unix format: 1451001600" $ do
       ST.readTime "1451001600" `shouldBe` Just (mkUTCTime (2015, 12, 25) (00, 00, 00))
 
+    it "convert utc time to unix integer" $ do
+      ST.utcAsUnix (mkUTCTime (2022, 06, 25) (00, 00, 00)) `shouldBe` Just 1656115200
+
+    it "convert utc time to default locale time as text" $ do
+      ST.utcAsDefaultLocale (mkUTCTime (1995, 02, 18) (00, 23, 00)) `shouldBe` "Sat, 18 Feb 1995 00:23:00 UTC"
+
 main :: IO ()
 main = do
   hspecTests <- testSpec "hspec tests" hspecSuite
