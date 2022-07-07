@@ -63,5 +63,3 @@ tests:
     - hspec
     - tasty
     - tasty-hspec
-    - tasty-quickcheck
-    - quickcheck-instances

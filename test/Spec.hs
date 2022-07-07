@@ -1,6 +1,4 @@
-import qualified Data.ByteString.Lazy as BSL
 import qualified Data.Fixed as DF
-import qualified Data.Text.Encoding as T
 import qualified Data.Text.Lazy as TL
 import qualified Data.Time as DT
 import qualified Data.Utility as U
@@ -9,10 +7,8 @@ import Relude
 import qualified Service.FileMetadata as SFM
 import qualified Service.Timestamp as ST
 import Test.Hspec
-import Test.QuickCheck.Instances
 import Test.Tasty
 import Test.Tasty.Hspec
-import Test.Tasty.QuickCheck
 
 mkUTCTime ::
   (Integer, Int, Int) ->
@@ -64,23 +60,8 @@ hspecSuite = do
     it "parse an empty file" $ do
       SFM.getFileMetadata (WAIP.FileInfo "kelpo.txt" "plain/text" "") `shouldBe` Right (SFM.Response {SFM.name = "kelpo.txt", SFM._type = "plain/text", SFM.size = 0})
 
--- All property tests required minimum amount of cases to pass
-maxPTests :: Int
-maxPTests = 1000
-
-propFileMetadataContentLength :: LByteString -> Property
-propFileMetadataContentLength c =
-  SFM.getFileMetadata (WAIP.FileInfo "kelpo.txt" "text/plain" c)
-    === Right (SFM.Response "kelpo.txt" "text/plain" (toInteger $ BSL.length c))
-
-propertyTests :: TestTree
-propertyTests =
-  testGroup
-    "Property testing"
-    [testProperty "Test for filemetadata content length parsing" (withMaxSuccess maxPTests propFileMetadataContentLength)]
-
 main :: IO ()
 main = do
   hspecTests <- testSpec "hspec tests" hspecSuite
   defaultMain $
-    testGroup "All tests" [hspecTests, propertyTests]
+    testGroup "All tests" [hspecTests]
