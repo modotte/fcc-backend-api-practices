@@ -101,11 +101,13 @@ test-suite fcc-backend-api-practices-test
     , hspec
     , iproute
     , network
+    , quickcheck-instances
     , random
     , relude
     , scotty
     , tasty
     , tasty-hspec
+    , tasty-quickcheck
     , text
     , time
     , uuid

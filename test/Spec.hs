@@ -1,4 +1,6 @@
+import qualified Data.ByteString.Lazy as BSL
 import qualified Data.Fixed as DF
+import qualified Data.Text.Encoding as T
 import qualified Data.Text.Lazy as TL
 import qualified Data.Time as DT
 import qualified Data.Utility as U
@@ -7,8 +9,10 @@ import Relude
 import qualified Service.FileMetadata as SFM
 import qualified Service.Timestamp as ST
 import Test.Hspec
+import Test.QuickCheck.Instances
 import Test.Tasty
 import Test.Tasty.Hspec
+import Test.Tasty.QuickCheck
 
 mkUTCTime ::
   (Integer, Int, Int) ->
@@ -22,13 +26,14 @@ mkUTCTime (year, mon, day) (hour, min, sec) =
 hspecSuite :: Spec
 hspecSuite = do
   describe "U.getHeader: gets client header" $ do
+    let ua = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.115 Safari/537.36"
+        al = "en-US,en;q=0.9"
+        cl = [("User-Agent", ua), ("Accept-Language", al)]
     it "gets User-Agent client header" $ do
-      let ua = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.115 Safari/537.36"
-       in U.getHeader "User-Agent" [("User-Agent", ua)] `shouldBe` Right (TL.toStrict ua)
+      U.getHeader "User-Agent" cl `shouldBe` Right (TL.toStrict ua)
 
     it "gets Accept-Language client header" $ do
-      let al = "en-US,en;q=0.9"
-       in U.getHeader "Accept-Language" [("Accept-Language", al), ("User-Agent", "blahlalala")] `shouldBe` Right (TL.toStrict al)
+      U.getHeader "Accept-Language" cl `shouldBe` Right (TL.toStrict al)
 
   describe "ST.readTime: try to parse time as text and converts to unix or utc time based on accepted formats" $ do
     it "parse invalid unix format" $ do
@@ -59,8 +64,23 @@ hspecSuite = do
     it "parse an empty file" $ do
       SFM.getFileMetadata (WAIP.FileInfo "kelpo.txt" "plain/text" "") `shouldBe` Right (SFM.Response {SFM.name = "kelpo.txt", SFM._type = "plain/text", SFM.size = 0})
 
+-- All property tests required minimum amount of cases to pass
+maxPTests :: Int
+maxPTests = 1000
+
+propFileMetadataContentLength :: LByteString -> Property
+propFileMetadataContentLength c =
+  SFM.getFileMetadata (WAIP.FileInfo "kelpo.txt" "text/plain" c)
+    === Right (SFM.Response "kelpo.txt" "text/plain" (toInteger $ BSL.length c))
+
+propertyTests :: TestTree
+propertyTests =
+  testGroup
+    "Property testing"
+    [testProperty "Test for filemetadata content length parsing" (withMaxSuccess maxPTests propFileMetadataContentLength)]
+
 main :: IO ()
 main = do
   hspecTests <- testSpec "hspec tests" hspecSuite
   defaultMain $
-    testGroup "All tests" [hspecTests]
+    testGroup "All tests" [hspecTests, propertyTests]
