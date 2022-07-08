@@ -76,6 +76,12 @@ app = do
 
   Scotty.get "/api/shorturl/:uid" $ do
     uid :: Int <- Scotty.param "uid"
+    cuAs <- DAS.webM DAS.load
+
+    case cuAs of
+      Nothing -> pure ()
+      Just as -> DAS.webM $ DAS.modify $ const as
+
     currentUrls <- DAS.webM $ DAS.get DAS.urls
     case HML.lookup uid currentUrls of
       Nothing ->
@@ -84,6 +90,11 @@ app = do
 
   Scotty.post "/api/shorturl/" $ do
     originUrl :: Text <- Scotty.param "origin"
+    cuAs <- DAS.webM DAS.load
+
+    case cuAs of
+      Nothing -> pure ()
+      Just as -> DAS.webM $ DAS.modify $ const as
 
     currentUrls <- DAS.webM $ DAS.get DAS.urls
 
@@ -93,4 +104,6 @@ app = do
 
     nc <- DAS.webM $ DAS.get DAS.urlCounter
     DAS.webM $ US.addUrl nc originUrl
+    currentUrls' <- DAS.webM $ DAS.get DAS.urls
+    DAS.webM $ DAS.save $ DAS.AppState nc currentUrls'
     U.makeResponse $ US.Response originUrl $ US.shortUrlPath <> show nc

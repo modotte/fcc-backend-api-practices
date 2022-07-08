@@ -13,8 +13,8 @@ import qualified Data.Utility as U
 import Relude
 
 data Response = Response
-  { originalUrl :: Text,
-    shortUrl :: Text
+  { originalUrl :: !Text,
+    shortUrl :: !Text
   }
 
 instance DA.ToJSON Response where

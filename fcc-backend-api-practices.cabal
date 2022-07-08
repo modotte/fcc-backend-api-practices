@@ -45,12 +45,10 @@ library
     , data-default-class
     , iproute
     , network
-    , random
     , relude
     , scotty
     , text
     , time
-    , uuid
     , wai
     , wai-extra
   default-language: Haskell2010
@@ -72,12 +70,10 @@ executable fcc-backend-api-practices-exe
     , fcc-backend-api-practices
     , iproute
     , network
-    , random
     , relude
     , scotty
     , text
     , time
-    , uuid
     , wai
     , wai-extra
   default-language: Haskell2010
@@ -101,14 +97,12 @@ test-suite fcc-backend-api-practices-test
     , hspec
     , iproute
     , network
-    , random
     , relude
     , scotty
     , tasty
     , tasty-hspec
     , text
     , time
-    , uuid
     , wai
     , wai-extra
   default-language: Haskell2010

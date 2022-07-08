@@ -19,6 +19,9 @@ import qualified Web.Scotty.Trans as Scotty
 port :: Int
 port = 3030
 
+dbName :: String
+dbName = "db.json"
+
 newtype ErrorResponse = ErrorResponse {errorResp :: Text} deriving (Show, Generic)
 
 instance DA.ToJSON ErrorResponse where
