@@ -44,12 +44,14 @@ modify f = ask >>= liftIO . atomically . flip modifyTVar' f
 
 -- In this case, we don't care what exactly if the file can't be accessed.
 -- We simply use the default AppState if we can't open the file.
-load :: WebM (Maybe AppState)
+load :: WebM AppState
 load = do
   d :: Either SomeException LByteString <- liftIO $ try (readFileLBS U.dbName)
   case d of
-    Left _ -> pure Nothing
-    Right s -> pure (DA.decode s :: Maybe AppState)
+    Left _ -> pure def
+    Right s -> case DA.decode s :: Maybe AppState of
+      Nothing -> pure def
+      Just as -> pure as
 
 save :: AppState -> WebM ()
 save = writeFileLBS U.dbName . DA.encode
